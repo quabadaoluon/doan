@@ -345,21 +345,21 @@ with tab_batch:
     with guide_c1:
         st.markdown("""
         **1. Các cột bắt buộc (12 cột):**
-        - `year`, `manufacturer`, `condition`, `fuel`
-        - `odometer`, `title_status`, `transmission`, `drive`
-        - `type`, `paint_color`, `lat`, `long`
+        - year, manufacturer, condition, fuel
+        - odometer, title_status, transmission, drive
+        - type, paint_color, lat, long
         
         **2. Định dạng chữ (Categorical):**
         - Phải trùng khớp với các lựa chọn trong phần **Dự đoán đơn lẻ**.
-        - Ví dụ: `manufacturer` nên là 'toyota', 'honda', 'ford'...
+        - Ví dụ: manufacturer nên là 'toyota', 'honda', 'ford'...
         """)
 
     with guide_c2:
         st.markdown("""
         **3. Định dạng số & Quy tắc lọc:**
-        - **Odometer:** Nhập số nguyên liền mạch (VD: `50000`).
-        - **Dữ liệu lỗi:** Nếu cột số chứa chữ, hệ thống tự đưa về `0`.
-        - **⚠️ Biến lỗi:** Nếu các cột chữ (hãng xe, hộp số,...) chứa giá trị lạ không có trong tập huấn luyện, giá xe dòng đó sẽ **tự động đặt bằng 0**.
+        - **Odometer:** Nhập số nguyên liền mạch (VD: 50000).
+        - **Dữ liệu lỗi:** Nếu cột số chứa chữ, hệ thống tự đưa về 0.
+        - **Biến lỗi:** Nếu các cột chữ (hãng xe, hộp số,...) chứa giá trị lạ không có trong tập huấn luyện, giá xe dòng đó sẽ tự động đặt bằng 0.
         """)
     st.markdown("---")
     uploaded_file = st.file_uploader(
