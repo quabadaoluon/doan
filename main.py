@@ -12,14 +12,14 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-    /* 1. Cấu hình chung */
     html, body, [class*="css"] {
         font-family: 'Inter', sans-serif;
-        font-size: 18px;
     }
 
     .stApp {
@@ -27,99 +27,101 @@ st.markdown("""
         color: #f1f5f9;
     }
 
-    /* Giới hạn độ rộng của trang để các ô không bị quá dài */
     .block-container {
-        padding-top: 2rem !important;
-        padding-bottom: 2rem !important;
-        max-width: 1000px; /* Thu hẹp lại để các ô nhập liệu tự động ngắn lại một cách tự nhiên */
+        padding-top: 1.5rem !important;
+        padding-bottom: 0rem !important;
+        max-width: 1200px;
     }
 
-    /* 2. Tiêu đề */
+    /* Header */
     .header-box {
         text-align: center;
-        padding-bottom: 30px;
+        padding: 10px 0 25px 0;
     }
 
     .main-title {
-        font-size: 48px;
+        font-size: 42px;
         font-weight: 800;
         background: linear-gradient(90deg, #38bdf8, #818cf8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        margin: 0;
     }
 
-    /* 3. Note Box */
+    /* Note Box */
     .note-box {
         background: #172554;
-        border-left: 5px solid #38bdf8;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        font-size: 17px;
+        border-left: 4px solid #38bdf8;
+        padding: 14px;
+        border-radius: 8px;
+        margin-bottom: 18px;
+        font-size: 14px;
+        color: #dbeafe;
     }
 
-    /* 4. CHỈNH THẲNG HÀNG VÀ KÍCH THƯỚC CHỮ */
-    /* Ép tất cả các nhãn (labels) có cùng chiều cao để input bên dưới thẳng hàng ngang */
-    [data-testid="stWidgetLabel"] p {
-        font-size: 16px !important;
-        font-weight: 700 !important;
+    /* Labels */
+    .stSelectbox label,
+    .stSlider label,
+    .stTextInput label,
+    .stNumberInput label {
         color: #94a3b8 !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
         text-transform: uppercase;
-        min-height: 50px; /* Chiều cao cố định cho label */
-        display: flex;
-        align-items: flex-end;
+        letter-spacing: 0.5px;
     }
 
-    /* Tăng kích thước chữ bên trong các ô nhập liệu */
-    .stSelectbox div[data-baseweb="select"], 
-    .stTextInput input, 
-    .stNumberInput input {
-        font-size: 18px !important;
-        height: 50px !important;
-        border-radius: 8px !important;
-    }
-
-    /* Fix lỗi lệch khung: Đảm bảo container của widget không bị tràn */
-    [data-testid="stHorizontalBlock"] {
-        align-items: flex-end; /* Căn chỉnh các cột theo đáy */
-    }
-
-    /* 5. Nút bấm */
+    /* Button */
     div.stButton > button {
         width: 100%;
         background: #2563eb;
         color: white;
-        padding: 15px;
-        border-radius: 10px;
-        font-size: 20px;
-        font-weight: 800;
-        margin-top: 20px;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        transition: 0.2s;
     }
 
-    /* 6. Kết quả */
+    div.stButton > button:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    /* Result Box */
     .result-container {
         background: #0ea5e9;
-        border-radius: 15px;
-        padding: 30px;
+        border-radius: 12px;
+        padding: 25px;
         text-align: center;
         color: white;
+        margin-top: 10px;
     }
 
-    .result-container h2 {
-        font-size: 50px !important;
-        font-weight: 900;
-        margin: 0;
-    }
-
-    /* 7. Tabs */
+    /* Tabs */
     .stTabs [data-baseweb="tab-list"] {
         gap: 10px;
     }
 
     .stTabs [data-baseweb="tab"] {
-        font-size: 18px;
-        font-weight: 700;
-        padding: 10px 25px;
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 8px 8px 0 0;
+        padding: 8px 20px;
+        color: #94a3b8;
+    }
+
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        background: #334155;
+        color: #38bdf8 !important;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 30px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -158,7 +160,7 @@ Vui lòng kiểm tra:
 
 tab_single, tab_batch = st.tabs([
     "🎯 DỰ ĐOÁN ĐƠN LẺ",
-    "📊 XỬ LÝ DỮ LIỆU LỚN"
+    "📊 DỰ ĐOÁN NHIỀU XE (File csv)"
 ])
 
 with tab_single:
@@ -339,24 +341,25 @@ with tab_batch:
     """, unsafe_allow_html=True)
 
     guide_c1, guide_c2 = st.columns(2)
-
+    
     with guide_c1:
         st.markdown("""
         **1. Các cột bắt buộc (12 cột):**
-        - year, manufacturer, condition, fuel
-        - odometer, title_status, transmission, drive
-        - type, paint_color, lat, long
+        - `year`, `manufacturer`, `condition`, `fuel`
+        - `odometer`, `title_status`, `transmission`, `drive`
+        - `type`, `paint_color`, `lat`, `long`
         
         **2. Định dạng chữ (Categorical):**
         - Phải trùng khớp với các lựa chọn trong phần **Dự đoán đơn lẻ**.
-        - Ví dụ: manufacturer nên là toyota, honda, ford...
+        - Ví dụ: `manufacturer` nên là 'toyota', 'honda', 'ford'...
         """)
 
     with guide_c2:
         st.markdown("""
-        **3. Định dạng số (Quan trọng):**
-        - **Odometer:** Nhập số nguyên liền mạch (VD: 50000).
-        - **Dữ liệu lỗi:** Nếu dòng nào chứa chữ ở cột số (VD: 'không biết'), hệ thống sẽ đưa về 0 để tránh lỗi ứng dụng.
+        **3. Định dạng số & Quy tắc lọc:**
+        - **Odometer:** Nhập số nguyên liền mạch (VD: `50000`).
+        - **Dữ liệu lỗi:** Nếu cột số chứa chữ, hệ thống tự đưa về `0`.
+        - **⚠️ Biến lỗi:** Nếu các cột chữ (hãng xe, hộp số,...) chứa giá trị lạ không có trong tập huấn luyện, giá xe dòng đó sẽ **tự động đặt bằng 0**.
         """)
     st.markdown("---")
     uploaded_file = st.file_uploader(
@@ -368,6 +371,7 @@ with tab_batch:
         try:
             df = pd.read_csv(uploaded_file)
             st.write("🔍 Xem trước dữ liệu vừa tải lên:")
+            
             check_df = pd.DataFrame({
                 "Cột": df.columns,
                 "Kiểu dữ liệu hiện tại": df.dtypes.astype(str),
@@ -387,22 +391,46 @@ with tab_batch:
                 if missing_cols:
                     st.error(f"❌ File thiếu các cột: {', '.join(missing_cols)}")
                 else:
-                    with st.spinner("Đang làm sạch dữ liệu và dự đoán..."):
+                    with st.spinner("Đang làm sạch dữ liệu và đối chiếu danh mục..."):
                         X_process = df[required_cols].copy()
 
                         numeric_cols = ["year", "odometer", "lat", "long"]
                         for col in numeric_cols:
                             X_process[col] = X_process[col].apply(lambda x: clean_numeric_data(x, col))
 
+                        categorical_cols = [
+                            "manufacturer", "condition", "fuel", "title_status", 
+                            "transmission", "drive", "type", "paint_color"
+                        ]
+                        
+                        is_valid_row = pd.Series(True, index=X_process.index)
+                        
+                        for col in categorical_cols:
+                            if col in categories:
+                                X_process[col] = X_process[col].astype(str).str.strip()
+                                valid_options = [str(opt).strip() for opt in categories[col]]
+                                
+                                is_valid_row = is_valid_row & X_process[col].isin(valid_options)
+
                         try:
-                            preds = np.expm1(model.predict(X_process))
+                            preds = np.zeros(len(X_process))
                             
+                            if is_valid_row.any():
+                                valid_data = X_process[is_valid_row]
+                                model_preds = np.expm1(model.predict(valid_data))
+                                preds[is_valid_row] = model_preds
+
                             df["Predicted Price"] = np.round(preds, 0).astype(int)
                             
                             df.loc[df["Predicted Price"] > 1000000, "Predicted Price"] = 50000
                             df.loc[df["Predicted Price"] < 0, "Predicted Price"] = 0
+                            
+                            invalid_count = (~is_valid_row).sum()
+                            if invalid_count > 0:
+                                st.warning(f"⚠️ Phát hiện {invalid_count} dòng có chứa danh mục lạ (Hãng xe, Nhiên liệu, Kiểu dáng...) không nằm trong dữ liệu gốc. Các dòng này đã được gán giá trị xe bằng $0.")
+                            else:
+                                st.success("✅ Toàn bộ dữ liệu hợp lệ! Xử lý thành công.")
 
-                            st.success("✅ Xử lý thành công! Giá đã được làm tròn.")
                             st.dataframe(df, use_container_width=True)
 
                             st.download_button(
